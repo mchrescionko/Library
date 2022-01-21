@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RegisterService {
     public void registerLogic(UserRequest userRequest){
-        System.out.println("sprawdzam hasło.");
+        System.out.println("sprawdzam hasło.,..");
         return ;
     }
 }
