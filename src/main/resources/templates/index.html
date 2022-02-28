@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Library</title>
 </head>
+<header th:insert="navigationBar/navigationBar.html :: header"></header>
 <body>
-    "hello world"
-    <a href="/register"> Rejestracja </a>
+    <div th:text="${errorMessage}">
+<!--        [[${errorMessage}]]-->
+    </div>
+
+    <div>
+        <a href="/register"> Rejestracja </a>
+    </div>
+        <a href="/login"> Logowanie </a>
+
 </body>
 </html>

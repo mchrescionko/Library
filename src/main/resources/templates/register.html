@@ -1,15 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
 </head>
 <body>
-"register"
+
 <div>
-    <form action="/register" method="post">
-        <input type="email" name="email">
-        <input type="password" name="password">
+    <form action="/register" method="post" th:object="${request}">
+
+        <div>
+            <label th:text="email"></label>
+            <input type="email" th:field="${request.email}">
+        </div>
+        <div>
+            <label th:text="hasło"></label>
+            <input type="password" th:field="${request.password}">
+        </div>
+        <div>
+            <label th:text="imię"></label>
+            <input type="text" th:field="${request.firstName}">
+        </div>
+        <div>
+            <label th:text="nazwisko"></label>
+            <input type="text" th:field="${request.lastName}">
+        </div>
+
+
         <button type="submit"> "wyslij"</button>
     </form>
 </div>

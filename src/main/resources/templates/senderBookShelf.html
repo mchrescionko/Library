@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="">
+<head>
+    <meta charset="UTF-8">
+    <title>Sender Book Shelf</title>
+</head>
+<body>
+<header th:insert="navigationBar/navigationBar.html :: header"></header>
+<tr th:each="book : ${books}">
+    <td>
+        <div th:text="${book.title}"> Title</div>
+    </td>
+    <td>
+        <div th:text="${book.authors}"> Author</div>
+    </td>
+    <td>
+        <a th:href="${'/book?id=' + book.id}">
+            <img th:src="${book.thumbnail}">
+        </a>
+    </td>
+    <form th:action="${'/chooseSenderBook?exchangeId='+exchangeId+'&senderBookId='+book.id}" method="post">
+        <button type="submit"> "Wybierz"</button>
+    </form>
+
+</tr>
+
+</body>
+</html>

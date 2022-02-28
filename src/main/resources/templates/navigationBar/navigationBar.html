@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>NaviBar</title>
+</head>
+<body>
+<div th:fragment="header">
+    <div sec:authorize="isAuthenticated()">
+
+        <header th:insert="navigationBar/authenticated.html :: header"></header>
+    </div>
+    <div sec:authorize="isAnonymous()">
+        <header th:insert="navigationBar/anonymous.html :: header"></header>
+    </div>
+</div>
+</body>
+</html>

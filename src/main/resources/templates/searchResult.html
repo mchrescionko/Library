@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Books Search Result</title>
+</head>
+<body>
+<header th:insert="navigationBar/navigationBar.html :: header"></header>
+<tr th:each="book : ${books}">
+    <td>
+        <div th:text="${book.title}"> Title</div>
+    </td>
+    <td>
+        <div th:text="${book.authors}"> Author</div>
+    </td>
+    <td>
+        <a th:href="${'/book?id=' + book.id}">
+            <img th:src="${book.thumbnail}">
+        </a>
+    </td>
+    <div sec:authorize="isAuthenticated()">
+        <form th:action="${'/add?id='+book.id}" method="post">
+            <button type="submit"> "dodaj do biblioteki"</button>
+        </form>
+    </div>
+
+    <div></div>
+</tr>
+</body>
+</html>
