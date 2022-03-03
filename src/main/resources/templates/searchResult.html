@@ -19,7 +19,8 @@
         </a>
     </td>
     <div sec:authorize="isAuthenticated()">
-        <form th:action="${'/add?id='+book.id}" method="post">
+        <form th:action="${'/add'}" method="post">
+            <input type="hidden" name="id" th:value="${book.id}">
             <button type="submit"> "dodaj do biblioteki"</button>
         </form>
     </div>

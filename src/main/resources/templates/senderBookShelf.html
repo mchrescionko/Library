@@ -18,7 +18,9 @@
             <img th:src="${book.thumbnail}">
         </a>
     </td>
-    <form th:action="${'/chooseSenderBook?exchangeId='+exchangeId+'&senderBookId='+book.id}" method="post">
+    <form th:action="${'/chooseSenderBook'}" method="post">
+        <input type="hidden" name="exchangeId" th:value="${exchangeId}">
+        <input type="hidden" name="senderBookId" th:value="${book.id}">
         <button type="submit"> "Wybierz"</button>
     </form>
 

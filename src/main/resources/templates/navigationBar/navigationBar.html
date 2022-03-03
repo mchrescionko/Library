@@ -5,7 +5,7 @@
     <title>NaviBar</title>
 </head>
 <body>
-<div th:fragment="header">
+<div th:fragment="header" >
     <div sec:authorize="isAuthenticated()">
 
         <header th:insert="navigationBar/authenticated.html :: header"></header>

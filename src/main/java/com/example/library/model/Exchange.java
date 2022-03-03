@@ -1,13 +1,14 @@
 package com.example.library.model;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
+@Builder
 @Entity
 @Table(name = "exchanges")
-@Data
+@AllArgsConstructor
+
 public class Exchange {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +22,18 @@ public class Exchange {
     private Book receiverBook;
     @ManyToOne(fetch = FetchType.EAGER)
     private Book senderBook;
-    private boolean firstStep;
-    private boolean secondStep;
-    private boolean thirdStep;
+    @Enumerated(EnumType.STRING)
+    private ExchangeStep exchangeStep;
 
     public Exchange() {
+    }
+
+    public Exchange(int id, User sender, User receiver, Book receiverBook, ExchangeStep exchangeStep) {
+        this.id = id;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.receiverBook = receiverBook;
+        this.exchangeStep = exchangeStep;
     }
 
     public int getId() {
@@ -76,15 +84,11 @@ public class Exchange {
         this.senderBook = senderBook;
     }
 
-    public void setFirstStep(boolean firstStep) {
-        this.firstStep = firstStep;
+    public void setExchangeStep(ExchangeStep exchangeStep) {
+        this.exchangeStep = exchangeStep;
     }
 
-    public void setSecondStep(boolean secondStep) {
-        this.secondStep = secondStep;
-    }
-
-    public void setThirdStep(boolean thirdStep) {
-        this.thirdStep = thirdStep;
+    public ExchangeStep getExchangeStep() {
+        return exchangeStep;
     }
 }

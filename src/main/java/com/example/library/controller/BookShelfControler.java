@@ -23,21 +23,18 @@ public class BookShelfControler {
 
     @GetMapping("/bookShelf")
     String search(Model model){
-
         List<Book> bookList = bookShelfService.booksFromBookShelf();
         model.addAttribute("books", bookList);
         model.addAttribute("user", bookList);
-
         List<Exchange> firstStepExchangeList = exchangeService.getFirstStepExchangesByReceiver();
         model.addAttribute("firstStepExchanges", firstStepExchangeList);
-
         List<Exchange> secondStepExchangeList = exchangeService.getSecondStepExchangesBySender();
         model.addAttribute("secondStepExchanges", secondStepExchangeList);
-
         return "bookShelf";
     }
     @PostMapping("/add")
     String add(String id){
+        System.out.println("id book: "+id);
         bookShelfService.addBookToBookShelf(id);
         return  "redirect:/bookShelf";
     }
@@ -46,5 +43,4 @@ public class BookShelfControler {
         bookShelfService.deleteBookFromBookShelf(id);
         return  "redirect:/bookShelf";
     }
-
 }

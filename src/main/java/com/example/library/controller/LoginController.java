@@ -25,10 +25,8 @@ public class LoginController {
 
     @PostMapping("/login")
     String loginPost(@ModelAttribute("request") UserRequest userRequest){
-
 //        UserRequest userRequest = new UserRequest(email, password);
         loginService.loginLogic(userRequest);
-
         return "index";
     }
 

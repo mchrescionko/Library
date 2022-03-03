@@ -2,12 +2,12 @@ package com.example.library.service;
 
 import com.example.library.model.Book;
 import com.example.library.model.Exchange;
+import com.example.library.model.ExchangeStep;
 import com.example.library.model.User;
 import com.example.library.repository.ExchangeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,37 +18,22 @@ public class ExchangeService {
     private LoginService loginService;
 
     public void createExchange(String receiverBookId, int receiverId) {
-        Book book = searchService.SearchByID(receiverBookId);
-        Exchange exchange = new Exchange();
-        exchange.setReceiverBook(book);
-        exchange.setReceiver(loginService.getUserById(receiverId));
-        exchange.setSender(loginService.loggedUser());
-        exchange.setFirstStep(true);
+        Exchange exchange = Exchange.builder()
+                .receiver(loginService.getUserById(receiverId))
+                .receiverBook(searchService.SearchByID(receiverBookId))
+                .sender(loginService.loggedUser())
+                .exchangeStep(ExchangeStep.FIRST)
+                .build();
+        System.out.println("uda;p sie");
         exchangeRepository.save(exchange);
-
     }
 
     public List<Exchange> getFirstStepExchangesByReceiver() {
-        List<Exchange> exchangeListFirstStep = new ArrayList<>();
-        for (Exchange exchange : exchangeRepository.findByReceiver(loginService.loggedUser())) {
-            if (exchange != null) {
-                if (exchange.isFirstStep()) {
-                    exchangeListFirstStep.add(exchange);
-                }
-            }
-        }
-        return exchangeListFirstStep;
+        return exchangeRepository.findByReceiver(loginService.loggedUser(), ExchangeStep.FIRST);
     }
+
     public List<Exchange> getSecondStepExchangesBySender() {
-        List<Exchange> exchangeListSecondStep = new ArrayList<>();
-        for (Exchange exchange : exchangeRepository.findBySender(loginService.loggedUser())) {
-            if (exchange != null) {
-                if (exchange.isSecondStep()) {
-                    exchangeListSecondStep.add(exchange);
-                }
-            }
-        }
-        return exchangeListSecondStep;
+        return exchangeRepository.findBySender(loginService.loggedUser(), ExchangeStep.SECOND);
     }
 
     public void deleteExchange(Integer id) {
@@ -57,28 +42,26 @@ public class ExchangeService {
 
     public void setSecondStep(Integer exchangeId, String senderBookId) {
         //czy to dobry sposob odpakowywania
-        Exchange exchange = exchangeRepository.findById(exchangeId).orElse(null);
+        Exchange exchange = exchangeRepository.findById(exchangeId).orElseThrow();
+        //orElseThrow + w kontrolerze tryCatch lub globalna obsługa wyjątków (tutorial)
+        //exception adivce - jakoś tak - obsługa globalna poprzez filtry wyłapujące wystąpienie wyjątków
 
-        exchange.setFirstStep(false);
-        exchange.setSecondStep(true);
+        exchange.setExchangeStep(ExchangeStep.SECOND);
 
         exchange.setSenderBook(searchService.SearchByID(senderBookId));
         exchangeRepository.save(exchange);
 
     }
 
-    public List<Book> booksFromOtherUserBookShelf(User owner) {
-        return owner.getBooks();
+    public List<Book> getSenderBooks(Integer exchangeId) {
+        User sender = exchangeRepository.findById(exchangeId).orElse(null).getSender();
+        return sender.getBooks();
     }
 
-    public Exchange getExchangeById(Integer exchangeId) {
-        return exchangeRepository.getById(exchangeId);
-    }
-
-    public void finalAccept(Integer exchangeId){
+    public void finalAccept(Integer exchangeId) {
         Exchange exchange = exchangeRepository.findById(exchangeId).orElse(null);
-        exchange.setSecondStep(false);
-        exchange.setThirdStep(true);
+
+        exchange.setExchangeStep(ExchangeStep.THIRD);
         User receiver = exchange.getReceiver();
         User sender = exchange.getSender();
         receiver.deleteBookFromBookShelf(exchange.getReceiverBook());

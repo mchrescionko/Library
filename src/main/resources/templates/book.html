@@ -9,16 +9,17 @@
 <h2 th:text="${book.title}"></h2>
 <div th:text="${book.authors}"></div>
 <picture>
-    <img th:src="${book.thumbnail}">
+    <img th:src="${book.thumbnail}" >
 </picture>
 <div th:text="${book.description}"></div>
 <h3> Osoby, które posiadają tę książkę </h3>
 <tr th:each="owner : ${owners}">
-    <div th:text = "${owner.email}"></div>
-    <form th:action="${'/sendRequest?receiverBookId='+book.id+'&receiverId='+owner.id}" method="post">
-        <button type="submit"> "wyślij zapytanie o wymianę"</button>
+    <div th:text="${owner.email}"></div>
+    <form th:action="${'/sendRequest'}" method="post">
+        <input type="hidden" name="receiverBookId" th:value="${book.id}">
+        <input type="hidden" name="receiverId" th:value="${owner.id}">
+        <button type="submit"> "Zaproponuj wymianę"</button>
     </form>
-<!--    <div th:text = "${owner.lastname}"></div>-->
 </tr>
 </body>
 </html>
