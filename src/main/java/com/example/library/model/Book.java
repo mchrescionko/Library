@@ -1,13 +1,14 @@
 package com.example.library.model;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name="books")
 @Data
+@Builder
+@AllArgsConstructor
 public class Book {
 
     @Id
@@ -15,6 +16,8 @@ public class Book {
     private String kind;
     @Transient
     private VolumeInfo volumeInfo;
+    @Transient
+    private SaleInfo saleInfo;
     @Column(length = 30000)
     private String title;
     @Column(length = 30000)
@@ -23,7 +26,8 @@ public class Book {
     private String thumbnail;
     @Column(length = 30000)
     private String description;
-
+    @Column(length = 30000)
+    private String buyLink;
 
     public Book() {
     }
@@ -62,7 +66,8 @@ public class Book {
         }
         this.authors=authors;
         this.description = volumeInfo.getDescription();
-        this.title = volumeInfo.getTitle();
+        this.title = "\""+volumeInfo.getTitle()+"\"";
         this.thumbnail = volumeInfo.getThumbnail();
+        this.buyLink = saleInfo.getBuyLink();
     }
 }
