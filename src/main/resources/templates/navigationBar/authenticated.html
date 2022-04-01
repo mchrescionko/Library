@@ -16,16 +16,16 @@
             </button>
 
             <a style="width: 40rem" th:href="${'/search'}">
-                <button style="float: right" type="button" class="btn btn-outline-secondary"> Szukaj Książki</button>
+                <button style="float: right" type="button" class="btn btn-outline-secondary"> Search</button>
             </a>
             <a th:href="${'/logout'}">
-                <button type="button" class="btn btn-outline-secondary"> Wyloguj się</button>
+                <button type="button" class="btn btn-outline-secondary"> Sign out</button>
             </a>
             <a th:href="${'/bookShelf'}">
-                <button type="button" class="btn btn-outline-secondary"> Biblioteczka</button>
+                <button type="button" class="btn btn-outline-secondary"> Bookshelf</button>
             </a>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <form th:action="${'/searchBook'}" class="d-flex" method="post">
+                <input name="title" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             </p>
