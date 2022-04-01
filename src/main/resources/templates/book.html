@@ -3,23 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <title>Book</title>
+
 </head>
-<body>
+<body class="py-5">
 <header th:insert="navigationBar/navigationBar.html :: header"></header>
-<h2 th:text="${book.title}"></h2>
-<div th:text="${book.authors}"></div>
-<picture>
-    <img th:src="${book.thumbnail}" >
-</picture>
-<div th:text="${book.description}"></div>
-<h3> Osoby, które posiadają tę książkę </h3>
-<tr th:each="owner : ${owners}">
-    <div th:text="${owner.email}"></div>
-    <form th:action="${'/sendRequest'}" method="post">
-        <input type="hidden" name="receiverBookId" th:value="${book.id}">
-        <input type="hidden" name="receiverId" th:value="${owner.id}">
-        <button type="submit"> "Zaproponuj wymianę"</button>
-    </form>
-</tr>
+<div th:fragment="header" class=" w-75 mx-auto">
+    <h2 class="text-center mt-2 col-md-12" th:text="${book.title}"></h2>
+    <h4 class="text-center mt-2 col-md-12" th:text="${book.authors}"></h4>
+    <div class="mt-2 col-md-12 row g-0">
+        <div class="col-md-4">
+            <img width="50%" th:src="${book.thumbnail}" class=" text-center img-fluid rounded-start shadow-lg card">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h6 class="card-title">Description</h6>
+                <p th:text="${book.description}" class="card-text">This is a wider card with supporting text below as a
+                    natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><small class="text-muted">Source: Google API Books</small></p>
+
+                <button type="button" class="btn btn-outline-secondary btn " data-toggle="modal"
+                        data-target="#exampleModalCenter">
+                    Add book
+                </button>
+
+                <button th:disabled="${book.buyLink==null}" type="button" class="btn btn-outline-secondary btn ">
+                    <a class="text-decoration-none link-dark" th:href="${book.buyLink}">Ebook </a>
+                </button>
+
+
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Adding book to your Bookshelf</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Please add only these books which you really own. Otherwise, the app may turn out to be
+                                unuseful for you.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <form th:action="${'/add'}" method="post">
+                                    <input type="hidden" name="id" th:value="${book.id}">
+                                    <button class="btn btn-outline-secondary btn " type="submit"> Add Book</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div style="height: 3rem"></div>
+        <!--        <div th:if="${message!=null}" th:text="${message}">-->
+        <!--            <button class="disabled"></button>-->
+        <!--        </div>-->
+
+
+        <h4> Friends, who own this book </h4>
+        <tr class=" w-50 mx-auto" th:each="owner : ${owners}">
+            <a th:text="${owner.firstName + ' ' + owner.lastName}"></a>
+            <form th:action="${'/askForSwap'}" method="post">
+                <input type="hidden" name="receiverBookId" th:value="${book.id}">
+                <input type="hidden" name="receiverId" th:value="${owner.id}">
+                <button class=" btn btn-outline-success" type="Ask for swap"> "Ask for a swap"</button>
+            </form>
+        </tr>
+    </div>
+</div>
+
+
 </body>
 </html>
