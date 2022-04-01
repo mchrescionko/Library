@@ -1,6 +1,6 @@
 package com.example.library.security.config;
 
-import com.example.library.service.LoginService;
+import com.example.library.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,13 +10,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
+@EnableWebMvc
 @AllArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final LoginService appUserService;
+    private final UserService appUserService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -24,14 +26,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/search","/register")
+                .antMatchers("/search", "/register", "/searchBook", "/login")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/bookShelf", true)
                 .and()
-                .logout();
+                .logout()
+                .logoutSuccessUrl("/search");
     }
 
     @Override
