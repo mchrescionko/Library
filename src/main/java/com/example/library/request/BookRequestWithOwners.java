@@ -4,10 +4,6 @@ import com.example.library.model.User;
 import com.example.library.model.VolumeInfo;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Transient;
 import java.util.List;
 
 @AllArgsConstructor
