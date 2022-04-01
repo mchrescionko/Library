@@ -4,28 +4,61 @@
     <meta charset="UTF-8">
     <title>Books Search Result</title>
 </head>
-<body>
+<body class="py-5">
 <header th:insert="navigationBar/navigationBar.html :: header"></header>
-<tr th:each="book : ${books}">
-    <td>
-        <div th:text="${book.title}"> Title</div>
-    </td>
-    <td>
-        <div th:text="${book.authors}"> Author</div>
-    </td>
-    <td>
-        <a th:href="${'/book?id=' + book.id}">
-            <img th:src="${book.thumbnail}">
-        </a>
-    </td>
-    <div sec:authorize="isAuthenticated()">
-        <form th:action="${'/add'}" method="post">
-            <input type="hidden" name="id" th:value="${book.id}">
-            <button type="submit"> "dodaj do biblioteki"</button>
-        </form>
-    </div>
+<div class="container-md, row">
+    <tr th:each="book : ${books}">
+        <div class=" g-7 ">
+            <center>
+                <td>
+                    <h6 th:text="${book.title}"> Title</h6>
+                </td>
+                <td>
+                    <div th:text="${book.authors}"> Author</div>
+                </td>
+                <td>
+                    <a th:href="${'/book?id=' + book.id}">
+                        <img class=" card shadow-lg" th:src="${book.thumbnail}">
+                    </a>
+                </td>
+                <div style="height: 1rem"> </div>
+                <div sec:authorize="isAuthenticated()">
+                    <button type="button" class="btn btn-outline-secondary btn " data-toggle="modal" data-target="#exampleModalCenter">
+                        Add book
+                    </button>
 
-    <div></div>
-</tr>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Adding book to your Bookshelf</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Please add only these books which you really own. Otherwise, the app may turn out to be unuseful for you.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <form th:action="${'/add'}" method="post">
+                                        <input type="hidden" name="id" th:value="${book.id}">
+                                        <button class="btn btn-outline-secondary btn " type="submit"> Add Book</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </center>
+        </div>
+        <div style="height: 2rem">
+
+        </div>
+    </tr>
+</div>
 </body>
 </html>
