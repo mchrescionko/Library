@@ -4,12 +4,24 @@
     <meta charset="UTF-8">
     <title>Search</title>
 </head>
-<body>
+<body class="py-5">
+
 <header th:insert="navigationBar/navigationBar.html :: header"></header>
-<form action="/search" method="post" th:object="${searchRequest}">
-    <input type="text" th:field="${searchRequest.title}">
-    <input type="text" th:field="${searchRequest.author}">
-    <button type="submit"> "szukaj"</button>
+<div class=" w-50 mx-auto">
+<form action="/search" method="post" class="d-flex "  th:object="${searchRequest}">
+
+    <input type="search" aria-label="Search" placeholder="Title" class="form-control me-2" th:field="*{title}">
+    <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}">r4ftr </div>
+    <input type="search" aria-label="Search" placeholder="Authors" class="form-control me-2" th:field="${searchRequest.author}">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+
+    <div th:if="${message!=''}">
+        <header  th:insert="message.html :: header"></header>
+    </div>
+
+
 </form>
+</div>
+
 </body>
 </html>

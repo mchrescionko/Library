@@ -4,27 +4,45 @@
     <meta charset="UTF-8">
     <title>Sender Book Shelf</title>
 </head>
-<body>
+<body class="py-5">
 <header th:insert="navigationBar/navigationBar.html :: header"></header>
+<div class=" container-md, row">
 <tr th:each="book : ${books}">
-    <td>
-        <div th:text="${book.title}"> Title</div>
-    </td>
-    <td>
-        <div th:text="${book.authors}"> Author</div>
-    </td>
-    <td>
-        <a th:href="${'/book?id=' + book.id}">
-            <img th:src="${book.thumbnail}">
-        </a>
-    </td>
-    <form th:action="${'/chooseSenderBook'}" method="post">
-        <input type="hidden" name="exchangeId" th:value="${exchangeId}">
-        <input type="hidden" name="senderBookId" th:value="${book.id}">
-        <button type="submit"> "Wybierz"</button>
-    </form>
+
+    <div class="col-md-3">
+        <div class="g-2 ">
+            <center>
+
+                <td>
+                    <h6 style="width: 13rem " th:text="${book.title}"> Title</h6>
+                </td>
+                <td>
+                    <div th:text="${book.authors}"> Author</div>
+                </td>
+                <a th:href="${'/book?id=' + book.id}">
+                    <div style="height: 1rem">
+
+                    </div>
+                    <td>
+
+                        <img class=" card shadow-lg" th:src="${book.thumbnail}">
+
+                    </td>
+                </a>
+                <div style="height: 1rem">
+
+                </div>
+                <form class="g-2" th:action="${'/chooseSenderBook'}" method="post">
+                    <input type="hidden" name="exchangeId" th:value="${exchangeId}">
+                    <input type="hidden" name="senderBookId" th:value="${book.id}">
+                    <button class="btn btn-outline-success btn " type="submit"> "Pick"</button>
+                </form>
+                <div style="height: 1rem"> </div>
+            </center>
+        </div>
+    </div>
 
 </tr>
-
+</div>
 </body>
 </html>
