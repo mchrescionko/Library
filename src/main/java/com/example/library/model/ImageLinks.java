@@ -1,5 +1,4 @@
 package com.example.library.model;
-
 import javax.persistence.Column;
 
 public class ImageLinks {
