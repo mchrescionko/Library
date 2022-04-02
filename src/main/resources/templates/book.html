@@ -3,11 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Book</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script>
+    $(document).ready(function(){
+    $("#myModal").modal('show');
+    });
 
+    </script>
 </head>
 <body class="py-5">
 <header th:insert="navigationBar/navigationBar.html :: header"></header>
+
+<div th:if="${message!=null}">
+    <header th:insert="message.html :: header"></header>
+</div>
+
 <div th:fragment="header" class=" w-75 mx-auto">
+
     <h2 class="text-center mt-2 col-md-12" th:text="${book.title}"></h2>
     <h4 class="text-center mt-2 col-md-12" th:text="${book.authors}"></h4>
     <div class="mt-2 col-md-12 row g-0">
@@ -20,17 +34,13 @@
                 <p th:text="${book.description}" class="card-text">This is a wider card with supporting text below as a
                     natural lead-in to additional content. This content is a little bit longer.</p>
                 <p class="card-text"><small class="text-muted">Source: Google API Books</small></p>
-
                 <button type="button" class="btn btn-outline-secondary btn " data-toggle="modal"
                         data-target="#exampleModalCenter">
                     Add book
                 </button>
-
                 <button th:disabled="${book.buyLink==null}" type="button" class="btn btn-outline-secondary btn ">
                     <a class="text-decoration-none link-dark" th:href="${book.buyLink}">Ebook </a>
                 </button>
-
-
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
                      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -55,30 +65,19 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
-
-
         <div style="height: 3rem"></div>
-        <!--        <div th:if="${message!=null}" th:text="${message}">-->
-        <!--            <button class="disabled"></button>-->
-        <!--        </div>-->
-
-
         <h4> Friends, who own this book </h4>
         <tr class=" w-50 mx-auto" th:each="owner : ${owners}">
             <a th:text="${owner.firstName + ' ' + owner.lastName}"></a>
             <form th:action="${'/askForSwap'}" method="post">
                 <input type="hidden" name="receiverBookId" th:value="${book.id}">
                 <input type="hidden" name="receiverId" th:value="${owner.id}">
-                <button class=" btn btn-outline-success" type="Ask for swap"> "Ask for a swap"</button>
+                <button class=" btn btn-outline-success"> "Ask for a swap"</button>
             </form>
         </tr>
     </div>
 </div>
-
-
 </body>
 </html>

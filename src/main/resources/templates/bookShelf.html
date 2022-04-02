@@ -2,12 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Book Shelf</title>
-    <link rel="stylesheet"
-          href="C:\Users\maciek\OneDrive\Dokumenty\Repos\library\library\src\main\resources\templates\css\bootstrap.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-</head>
+    <title>Bookshelf</title></head>
 <body class="py-5">
 
 <header th:insert="navigationBar/navigationBar.html :: header"></header>
@@ -17,74 +12,86 @@
         <div class="col-md-3">
             <div class="g-2 ">
                 <center>
-                <td>
-                    <h6 style="width: 13rem " th:text="${book.title}"> Title</h6>
-                </td>
-                <td>
-                    <div  th:text="${book.authors}"> Author</div>
-                </td>
-                <td>
+
+                    <td>
+                        <h6 style="width: 13rem " th:text="${book.title}"> Title</h6>
+                    </td>
+                    <td>
+                        <div th:text="${book.authors}"> Author</div>
+                    </td>
                     <a th:href="${'/book?id=' + book.id}">
-                        <img class=" card shadow-lg" th:src="${book.thumbnail}">
+                        <div style="height: 1rem">
+
+                        </div>
+                        <td>
+
+                            <img class=" card shadow-lg" th:src="${book.thumbnail}">
+
+                        </td>
                     </a>
-                </td>
                     <div style="height: 1rem">
 
                     </div>
-                <form class="g-2" th:action="${'/delete'}" method="post">
-                    <input type="hidden" name="id" th:value="${book.id}">
-                    <button  type="submit" class="btn btn-outline-secondary btn "> Usuń</button>
-                </form>
+                    <form class="g-2" th:action="${'/delete'}" method="post">
+                        <input type="hidden" name="id" th:value="${book.id}">
+                        <button type="submit" class="btn btn-outline-secondary btn "> Usuń</button>
+                    </form>
+                    <div style="height: 1rem"></div>
                 </center>
             </div>
         </div>
     </tr>
 </div>
-<h3>New Exchanges</h3>
-<tr th:each="exchange : ${firstStepExchanges}">
-    rftg
-    <div th:text="${'message: '+exchange.message}">
-    </div>
-    <div th:text="${'from: '+exchange.sender.firstName+' '+exchange.sender.lastName}">
-    </div>
-    <div th:text="${'book: '+exchange.receiverBook.title}">
-    </div>
-    <a th:href="${'/book?id=' + exchange.receiverBook.id}">
-        <button type="submit">Opis</button>
-    </a>
-    <form th:action="${'/denyExchange?id=' + exchange.id}" method="post">
-        <button type="submit">Odrzuć</button>
-    </form>
-    <form th:action="${'/acceptFirstStep?exchangeId=' + exchange.id}" method="post">
-        <button type="submit">Wybierz książkę do wymiany</button>
-    </form>
+<div style="height: 2rem"></div>
+<div class="w-75 mx-auto">
+    <h4>New Swaps</h4>
+    <tr class=" w-50 mx-auto" th:each="exchange : ${firstStepExchanges}">
 
-</tr>
-<h3>Exchanges from receivers</h3>
-<tr th:each="exchange : ${secondStepExchanges}">
-    rftg
-    <div th:text="${'message: '+exchange.message}">
-    </div>
-    <div th:text="${'from: '+exchange.receiver.firstName+' '+exchange.receiver.lastName}">
-    </div>
-    <div th:text="${'receiver book : '+exchange.receiverBook.title}">
-    </div>
-    <a th:href="${'/book?id=' + exchange.receiverBook.id}">
-        <button type="submit">Opis</button>
-    </a>
-    <div th:text="${'your book: '+exchange.senderBook.title}">
-    </div>
-    <a th:href="${'/book?id=' + exchange.senderBook.id}">
-        <button type="submit">Opis</button>
-    </a>
-    <form th:action="${'/denyExchange?id=' + exchange.id}" method="post">
-        <button type="submit">Odrzuć</button>
-    </form>
-    <form th:action="${'/finalAccept?exchangeId=' + exchange.id}" method="post">
-        <button type="submit">Wymień</button>
-    </form>
+        <div th:text="${exchange.message}">
+        </div>
+        <div th:text="${exchange.sender.firstName+' '+exchange.sender.lastName}">
+        </div>
+        <div th:text="${exchange.receiverBook.title}">
+        </div>
+        <a th:href="${'/book?id=' + exchange.receiverBook.id}">
+            <button class="m-1 btn btn-outline-success" type="submit">Description</button>
+        </a>
+        <form th:action="${'/denyExchange?id=' + exchange.id}" method="post">
+            <button class="m-1 btn btn-outline-danger" type="submit">Reject</button>
+        </form>
+        <form th:action="${'/choseSenderBook'}" method="post">
+            <input type="hidden" name="exchangeId" th:value="${exchange.id}">
+            <button class="m-1 btn btn-outline-success" type="submit">Check friend's library</button>
+        </form>
 
-</tr>
+    </tr>
+    <div style="height: 2rem"></div>
+    <h4>Swaps from receivers</h4>
+    <tr th:each="exchange : ${secondStepExchanges}">
+        <div th:text="${exchange.message}">
+        </div>
+        <div th:text="${exchange.receiver.firstName+' '+exchange.receiver.lastName}">
+        </div>
+        <div th:text="${'Receiver book: '+exchange.receiverBook.title}">
+        </div>
+        <a th:href="${'/book?id=' + exchange.receiverBook.id}">
+            <button class="m-1 btn btn-outline-success" type="submit">Description</button>
+        </a>
+        <div th:text="${'Your book: '+exchange.senderBook.title}">
+        </div>
+        <a th:href="${'/book?id=' + exchange.senderBook.id}">
+            <button class="m-1 btn btn-outline-success" type="submit">Description</button>
+        </a>
+        <form th:action="${'/denyExchange?id=' + exchange.id}" method="post">
+            <button class="m-1  btn btn-outline-danger" type="submit">Reject</button>
+        </form>
+        <form th:action="${'/finalAccept?exchangeId=' + exchange.id}" method="post">
+            <button class="m-1  btn btn-outline-success" type="submit">Swap</button>
+        </form>
+
+    </tr>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
