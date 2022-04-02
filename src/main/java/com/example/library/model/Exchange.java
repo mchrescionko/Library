@@ -1,7 +1,5 @@
 package com.example.library.model;
-
 import lombok.*;
-
 import javax.persistence.*;
 
 @Builder
