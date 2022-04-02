@@ -21,10 +21,7 @@ public class BookController {
         Book book = bookService.SearchByID(id);
         model.addAttribute("book", book);
         model.addAttribute("owners", bookService.searchOwnersWithoutLoggedUser(book, userService.loggedUser().getId()));
-        if (message != null) {
-            model.addAttribute("message", message);
-            return "bookWithMessage";
-        }
+        model.addAttribute("message", message);
         return "book";
     }
 }
