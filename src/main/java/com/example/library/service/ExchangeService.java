@@ -7,7 +7,6 @@ import com.example.library.model.User;
 import com.example.library.repository.ExchangeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -15,25 +14,32 @@ import java.util.List;
 public class ExchangeService {
     private ExchangeRepository exchangeRepository;
     private SearchService searchService;
-    private LoginService loginService;
+    private UserService userService;
+    private final String doubledAskMessage = "You already asked for this book!";
 
     public void createExchange(String receiverBookId, int receiverId) {
+        if (doesExchangeExist(receiverBookId, receiverId, userService.loggedUser().getId())) {
+            throw new RuntimeException(doubledAskMessage);
+        }
         Exchange exchange = Exchange.builder()
-                .receiver(loginService.getUserById(receiverId))
+                .receiver(userService.getUserById(receiverId))
                 .receiverBook(searchService.SearchByID(receiverBookId))
-                .sender(loginService.loggedUser())
+                .sender(userService.loggedUser())
                 .exchangeStep(ExchangeStep.FIRST)
                 .build();
-        System.out.println("uda;p sie");
         exchangeRepository.save(exchange);
     }
 
+    public boolean doesExchangeExist(String bookId, Integer receiverId, Integer senderId) {
+        return exchangeRepository.findExchange(senderId, receiverId, bookId).isPresent();
+    }
+
     public List<Exchange> getFirstStepExchangesByReceiver() {
-        return exchangeRepository.findByReceiver(loginService.loggedUser(), ExchangeStep.FIRST);
+        return exchangeRepository.findByReceiver(userService.loggedUser(), ExchangeStep.FIRST);
     }
 
     public List<Exchange> getSecondStepExchangesBySender() {
-        return exchangeRepository.findBySender(loginService.loggedUser(), ExchangeStep.SECOND);
+        return exchangeRepository.findBySender(userService.loggedUser(), ExchangeStep.SECOND);
     }
 
     public void deleteExchange(Integer id) {
@@ -41,16 +47,10 @@ public class ExchangeService {
     }
 
     public void setSecondStep(Integer exchangeId, String senderBookId) {
-        //czy to dobry sposob odpakowywania
         Exchange exchange = exchangeRepository.findById(exchangeId).orElseThrow();
-        //orElseThrow + w kontrolerze tryCatch lub globalna obsługa wyjątków (tutorial)
-        //exception adivce - jakoś tak - obsługa globalna poprzez filtry wyłapujące wystąpienie wyjątków
-
         exchange.setExchangeStep(ExchangeStep.SECOND);
-
         exchange.setSenderBook(searchService.SearchByID(senderBookId));
         exchangeRepository.save(exchange);
-
     }
 
     public List<Book> getSenderBooks(Integer exchangeId) {
@@ -60,7 +60,6 @@ public class ExchangeService {
 
     public void finalAccept(Integer exchangeId) {
         Exchange exchange = exchangeRepository.findById(exchangeId).orElse(null);
-
         exchange.setExchangeStep(ExchangeStep.THIRD);
         User receiver = exchange.getReceiver();
         User sender = exchange.getSender();
@@ -69,10 +68,7 @@ public class ExchangeService {
         sender.deleteBookFromBookShelf(exchange.getSenderBook());
         sender.addBook(exchange.getReceiverBook());
         exchangeRepository.save(exchange);
-        loginService.save(sender);
-        loginService.save(receiver);
-
+        userService.save(sender);
+        userService.save(receiver);
     }
-
-
 }
