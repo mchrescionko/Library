@@ -12,10 +12,13 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
+@EqualsAndHashCode
 @Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class User implements UserDetails {
 
     @Id
@@ -32,6 +35,7 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Book> books;
 
+
     public User(String firstName, String lastName, String email, String password, AppUserRole appUserRole) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -41,6 +45,10 @@ public class User implements UserDetails {
     }
 
     public User(String email, String password) {
+    }
+
+    public boolean doesUserHaveBook(Book book){
+        return books.contains(book);
     }
 
     @Override

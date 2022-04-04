@@ -1,25 +1,21 @@
 package com.example.library.controller;
-
 import com.example.library.model.Book;
 import com.example.library.model.Exchange;
-import com.example.library.model.User;
 import com.example.library.service.BookShelfService;
 import com.example.library.service.ExchangeService;
-import com.example.library.service.LoginService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
 @AllArgsConstructor
-public class BookShelfControler {
+public class BookShelfController {
     private BookShelfService bookShelfService;
     private ExchangeService exchangeService;
-    private LoginService loginService;
 
     @GetMapping("/bookShelf")
     String search(Model model){
@@ -32,15 +28,23 @@ public class BookShelfControler {
         model.addAttribute("secondStepExchanges", secondStepExchangeList);
         return "bookShelf";
     }
+
     @PostMapping("/add")
-    String add(String id){
-        System.out.println("id book: "+id);
-        bookShelfService.addBookToBookShelf(id);
-        return  "redirect:/bookShelf";
+    String add(String id, RedirectAttributes redirectAttributes){
+        try{
+            bookShelfService.addBookToBookShelf(id);
+            return  "redirect:/bookShelf";
+        }catch (RuntimeException e) {
+            redirectAttributes.addAttribute("id", id);
+            redirectAttributes.addAttribute("message", e.getMessage());
+            return "redirect:/book";
+        }
     }
+
     @PostMapping("/delete")
     String delete(String id){
         bookShelfService.deleteBookFromBookShelf(id);
         return  "redirect:/bookShelf";
     }
 }
+

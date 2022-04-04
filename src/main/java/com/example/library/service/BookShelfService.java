@@ -2,40 +2,35 @@ package com.example.library.service;
 
 import com.example.library.model.Book;
 import com.example.library.model.User;
-import com.example.library.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class BookShelfService {
-    private LoginService loginService;
+    private UserService userService;
     private SearchService searchService;
-    private UserRepository userRepository;
+    private final String bookAlreadyInBookshelfMessage = "You already have this book!";
 
-    public List<Book> booksFromBookShelf (){
-        return loginService.loggedUser().getBooks();
+    public List<Book> booksFromBookShelf() {
+        return userService.loggedUser().getBooks();
     }
 
-
-
-    public void addBookToBookShelf(String id){
-        User user = loginService.loggedUser();
+    public void addBookToBookShelf(String id) {
+        User user = userService.loggedUser();
         Book book = searchService.SearchByID(id);
+        if (user.doesUserHaveBook(book)) {
+            throw new RuntimeException(bookAlreadyInBookshelfMessage);
+        }
         user.addBook(book);
-        loginService.save(user);
+        userService.save(user);
     }
 
-    public void deleteBookFromBookShelf(String id){
-        User user = loginService.loggedUser();
+    public void deleteBookFromBookShelf(String id) {
+        User user = userService.loggedUser();
         Book book = searchService.SearchByID(id);
         user.deleteBookFromBookShelf(book);
-        loginService.save(user);
+        userService.save(user);
     }
-
-
-
 }

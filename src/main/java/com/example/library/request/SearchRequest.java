@@ -1,17 +1,17 @@
 package com.example.library.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
-import javax.persistence.Entity;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SearchRequest {
+
     private String title;
     private String author;
-
-    public SearchRequest() {
-    }
-
-
 
 }

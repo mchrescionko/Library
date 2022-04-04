@@ -26,4 +26,12 @@ public class SearchBookController {
         model.addAttribute("books", searchService.search(searchRequest));
         return "searchResult";
     }
+
+    @PostMapping("/searchBook")
+    String searchBook(Model model, String title){
+       SearchRequest searchRequest = SearchRequest.builder()
+               .title(title).build();
+       model.addAttribute("books", searchService.search(searchRequest));
+       return "searchResult";
+    }
 }

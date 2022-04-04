@@ -20,13 +20,15 @@
                     <a th:href="${'/book?id=' + book.id}">
                         <img class=" card shadow-lg" th:src="${book.thumbnail}">
                     </a>
+                    <div style="height: 1rem"></div>
+                    <a th:href="${'/book?id=' + book.id}">
+                        <button type="button" class="btn btn-outline-secondary btn " >
+                            Details
+                        </button>
+                    </a>
                 </td>
                 <div style="height: 1rem"> </div>
                 <div sec:authorize="isAuthenticated()">
-                    <button type="button" class="btn btn-outline-secondary btn " data-toggle="modal" data-target="#exampleModalCenter">
-                        Add book
-                    </button>
-
                     <!-- Modal -->
                     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">

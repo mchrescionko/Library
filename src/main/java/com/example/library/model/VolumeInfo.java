@@ -1,9 +1,6 @@
 package com.example.library.model;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.Column;
-import javax.persistence.Lob;
 import javax.persistence.Transient;
 import java.util.List;
 
@@ -18,7 +15,7 @@ public class VolumeInfo {
     private ImageLinks imageLinks;
     @Column(length = 2000)
     private String description;
-
+    private String buyLink;
 
     public VolumeInfo() {
     }
@@ -51,5 +48,9 @@ public class VolumeInfo {
 
     public List<String> getAuthors() {
         return authors;
+    }
+
+    public String getBuyLink() {
+        return buyLink;
     }
 }

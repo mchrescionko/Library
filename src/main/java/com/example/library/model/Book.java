@@ -52,7 +52,7 @@ public class Book {
         return thumbnail;
     }
 
-    public void set(){
+    public void setFields(){
         String authors = "";
         if(volumeInfo.getAuthors()!=null){
             System.out.println("f");
