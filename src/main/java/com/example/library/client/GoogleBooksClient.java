@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -17,6 +18,12 @@ import java.util.Objects;
 public class GoogleBooksClient {
     public static String apiKey = "AIzaSyBxchJv2O9UZsE7iAC0Bz7_VFY_WUCXghw";
     public static String searchFoo = "https://www.googleapis.com/books/v1/volumes?q=%s+inauthor:%s&key=";
+
+    private ObjectMapper mapper = new ObjectMapper();
+
+    public GoogleBooksClient() {
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 
     public List<Book> getBookDetails(SearchRequest searchRequest) {
         ResponseEntity<String> response = getStringResponseEntity(searchRequest);
@@ -26,11 +33,11 @@ public class GoogleBooksClient {
 
     private List<Book> getBookList(String jsonBooks) {
         List<Book> booksList;
-        ObjectMapper mapper2 = new ObjectMapper();
         try {
-            booksList = mapper2.readValue(jsonBooks, new TypeReference<>() {
+            booksList = mapper.readValue(jsonBooks, new TypeReference<>() {
             });
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
             return null;
         }
         for (Book book : booksList) {
@@ -40,8 +47,6 @@ public class GoogleBooksClient {
     }
 
     private String getString(ResponseEntity<String> response) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JsonNode root = null;
         try {
             root = mapper.readTree(response.getBody());
