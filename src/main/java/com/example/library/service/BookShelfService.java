@@ -11,20 +11,14 @@ import java.util.List;
 public class BookShelfService {
     private UserService userService;
     private SearchService searchService;
-    private final String bookAlreadyInBookshelfMessage = "You already have this book!";
 
     public List<Book> booksFromBookShelf() {
         return userService.loggedUser().getBooks();
     }
 
     public void addBookToBookShelf(String id) {
-        User user = userService.loggedUser();
         Book book = searchService.SearchByID(id);
-        if (user.doesUserHaveBook(book)) {
-            throw new RuntimeException(bookAlreadyInBookshelfMessage);
-        }
-        user.addBook(book);
-        userService.save(user);
+        userService.addBookToLoggedUser(book);
     }
 
     public void deleteBookFromBookShelf(String id) {

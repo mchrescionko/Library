@@ -1,5 +1,6 @@
 package com.example.library.model;
 
+import com.example.library.exceptions.DoubleBookInBookShelfException;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -47,10 +48,6 @@ public class User implements UserDetails {
     public User(String email, String password) {
     }
 
-    public boolean doesUserHaveBook(Book book){
-        return books.contains(book);
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority =
@@ -93,6 +90,9 @@ public class User implements UserDetails {
     }
 
     public void addBook(Book book){
+        if(books.contains(book)){
+            throw new DoubleBookInBookShelfException("You already have this book!");
+        }
         books.add(book);
     }
 

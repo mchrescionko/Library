@@ -1,6 +1,6 @@
 package com.example.library.service;
 
-import com.example.library.exceptions.MyException;
+import com.example.library.exceptions.NoSuchBookException;
 import com.example.library.model.Book;
 import com.example.library.model.User;
 import com.example.library.repository.BookRepository;
@@ -22,8 +22,8 @@ public class BookService {
         return users;
     }
 
-    public Book SearchByID(String id) {
-        return bookRepository.findById(id).orElseThrow(()-> new MyException(noIdMessage));
+    public Book SearchByID(String id) throws NoSuchBookException {
+        return bookRepository.findById(id).orElseThrow(()-> new NoSuchBookException(noIdMessage));
     }
 
     public void save(Book book){

@@ -1,6 +1,7 @@
 package com.example.library.service;
 
 import com.example.library.model.AppUserRole;
+import com.example.library.model.Book;
 import com.example.library.model.User;
 import com.example.library.repository.UserRepository;
 import com.example.library.request.UserRequest;
@@ -40,7 +41,7 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    public String signUpUser(User user) {
+    public void signUpUser(User user) {
         boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
         if (userExists) {
             throw new IllegalStateException("email already taken");
@@ -48,7 +49,6 @@ public class UserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
-        return "";
     }
 
     public boolean passwordValidation(String password) {
@@ -60,10 +60,15 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_msg, email)));
     }
 
+
     public User loggedUser(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
-        return user;
+        return (User) auth.getPrincipal();
+    }
+
+    public void addBookToLoggedUser(Book book){
+        loggedUser().addBook(book);
+        save(loggedUser());
     }
 
     public void save(User user){

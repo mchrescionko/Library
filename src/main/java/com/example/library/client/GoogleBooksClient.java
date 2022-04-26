@@ -7,13 +7,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class GoogleBooksClient {
@@ -21,16 +19,27 @@ public class GoogleBooksClient {
     public static String searchFoo = "https://www.googleapis.com/books/v1/volumes?q=%s+inauthor:%s&key=";
 
     public List<Book> getBookDetails(SearchRequest searchRequest) {
-        String titleSearch = searchRequest.getTitle() ;
-        String authorSearch = searchRequest.getAuthor();
+        ResponseEntity<String> response = getStringResponseEntity(searchRequest);
+        String jsonBooks = getString(response);
+        return getBookList(jsonBooks);
+    }
 
-        RestTemplate restTemplate = new RestTemplate();
-        String fooResourceURL = String.format(searchFoo, titleSearch, authorSearch);
-        String fullURL = fooResourceURL + apiKey;
+    private List<Book> getBookList(String jsonBooks) {
+        List<Book> booksList;
+        ObjectMapper mapper2 = new ObjectMapper();
+        try {
+            booksList = mapper2.readValue(jsonBooks, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            return null;
+        }
+        for (Book book : booksList) {
+            book.setFields();
+        }
+        return booksList;
+    }
 
-        ResponseEntity<String> response = restTemplate.getForEntity(fullURL, String.class);
-//        assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-
+    private String getString(ResponseEntity<String> response) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JsonNode root = null;
@@ -40,19 +49,19 @@ public class GoogleBooksClient {
             e.printStackTrace();
         }
 
-        assert root != null;
-        JsonNode items = root.path("items");
-        String jsonBooks = items.toPrettyString();
-        List<Book> booksList;
-        try {
-            booksList = mapper.readValue(jsonBooks, new TypeReference<>() {
-            });
-        } catch (JsonProcessingException e) {
-            return null;
-        }
-        for (Book book : booksList) {
-            book.setFields();
-        }
-        return booksList;
+        JsonNode items = Objects.requireNonNull(root).path("items");
+        return items.toPrettyString();
+    }
+
+    private ResponseEntity<String> getStringResponseEntity(SearchRequest searchRequest) {
+        String titleSearch = searchRequest.getTitle();
+        String authorSearch = searchRequest.getAuthor();
+
+        RestTemplate restTemplate = new RestTemplate();
+        String fooResourceURL = String.format(searchFoo, titleSearch, authorSearch);
+        String fullURL = fooResourceURL + apiKey;
+
+        ResponseEntity<String> response = restTemplate.getForEntity(fullURL, String.class);
+        return response;
     }
 }

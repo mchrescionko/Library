@@ -1,5 +1,6 @@
 package com.example.library.controller;
 
+import com.example.library.exceptions.NoSuchBookException;
 import com.example.library.model.Book;
 import com.example.library.service.BookService;
 import com.example.library.service.UserService;
@@ -15,7 +16,7 @@ public class BookController {
     private UserService userService;
 
     @GetMapping("/book")
-    String book(String id, Model model, String message){
+    String book(String id, Model model, String message) throws NoSuchBookException {
         Book book = bookService.SearchByID(id);
         model.addAttribute("book", book);
         model.addAttribute("owners", bookService.searchOwnersWithoutLoggedUser(book, userService.loggedUser().getId()));

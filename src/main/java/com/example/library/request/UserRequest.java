@@ -1,14 +1,14 @@
 package com.example.library.request;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
 @Data
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class UserRequest {
 
     @Email

@@ -2,17 +2,11 @@ package com.example.library.service;
 
 import com.example.library.model.Book;
 import com.example.library.model.User;
-import com.example.library.repository.BookRepository;
-import com.example.library.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 
 class BookShelfServiceTest {

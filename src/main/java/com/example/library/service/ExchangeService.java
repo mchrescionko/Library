@@ -31,7 +31,7 @@ public class ExchangeService {
     }
 
     public boolean doesExchangeExist(String bookId, Integer receiverId, Integer senderId) {
-        return exchangeRepository.findExchange(senderId, receiverId, bookId).isPresent();
+        return exchangeRepository.findExchange(senderId, receiverId, bookId).isEmpty();
     }
 
     public List<Exchange> getFirstStepExchangesByReceiver() {
@@ -46,20 +46,21 @@ public class ExchangeService {
         exchangeRepository.deleteById(id);
     }
 
-    public void setSecondStep(Integer exchangeId, String senderBookId) {
+    public Exchange setSecondStep(Integer exchangeId, String senderBookId) {
         Exchange exchange = exchangeRepository.findById(exchangeId).orElseThrow();
         exchange.setExchangeStep(ExchangeStep.SECOND);
         exchange.setSenderBook(searchService.SearchByID(senderBookId));
         exchangeRepository.save(exchange);
+        return exchange;
     }
 
     public List<Book> getSenderBooks(Integer exchangeId) {
-        User sender = exchangeRepository.findById(exchangeId).orElse(null).getSender();
+        User sender = exchangeRepository.findById(exchangeId).orElseThrow(null).getSender();
         return sender.getBooks();
     }
 
     public void finalAccept(Integer exchangeId) {
-        Exchange exchange = exchangeRepository.findById(exchangeId).orElse(null);
+        Exchange exchange = exchangeRepository.findById(exchangeId).orElseThrow(null);
         exchange.setExchangeStep(ExchangeStep.THIRD);
         User receiver = exchange.getReceiver();
         User sender = exchange.getSender();
