@@ -25,8 +25,7 @@ Spring Boot Security,
 Bootstrap
 
 ## Setup
-//na jakim porcie, jaka baza danych, konfiguracj abazy danych
-?
+Port: 8085, baza danych: PostgreSQL
 
 ## Sources
 This app is inspired by a website www.lubimyczytac.pl where there is not possibility to ask a friend to borrow his book. 
@@ -40,9 +39,5 @@ As times goes by I came up with an idea to propose the book swap instead of simp
 * checking your friends libraries,
 * offering book swaps
 
-
-+ foty
-
-
-
+![image](https://user-images.githubusercontent.com/57547281/165935151-4013ef02-ea07-486b-91b2-ff443297d248.png)
 
